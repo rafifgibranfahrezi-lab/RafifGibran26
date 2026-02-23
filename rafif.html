@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pojok Baca Digital 8C</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Pengaturan Dasar */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        /* Header Styling */
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .title-oswald {
+            font-family: 'Oswald', sans-serif;
+            margin: 5px 0;
+            letter-spacing: 1px;
+        }
+
+        h1.title-oswald { font-size: 2.5em; text-transform: uppercase; }
+        h2.title-oswald { font-size: 1.8em; color: #ffdd57; }
+        .subtitle { font-size: 1.2em; font-weight: bold; margin-bottom: 20px; }
+        .english-title { font-size: 1.5em; font-weight: bold; letter-spacing: 2px; }
+
+        /* Animasi Logo */
+        .logo {
+            width: 120px;
+            height: auto;
+            margin-top: 15px;
+            /* Efek Timbul */
+            filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.6)) contrast(1.1);
+            /* Animasi Rotasi Y searah jarum jam */
+            animation: spinY 6s linear infinite;
+        }
+
+        @keyframes spinY {
+            0% { transform: perspective(600px) rotateY(0deg); }
+            100% { transform: perspective(600px) rotateY(360deg); }
+        }
+
+        /* Running Text (Marquee CSS) Kiri ke Kanan */
+        .marquee-container {
+            background-color: #ffdd57;
+            color: #333;
+            font-weight: bold;
+            padding: 10px 0;
+            overflow: hidden;
+            position: relative;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .marquee-content {
+            display: inline-block;
+            animation: marqueeLeftToRight 15s linear infinite;
+        }
+
+        @keyframes marqueeLeftToRight {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100vw); }
+        }
+
+        /* Container Utama */
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Identitas Section */
+        .identity-section {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .profile-pic {
+            width: 300px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 5px solid #eaeaea;
+            box-shadow: 3px 3px 15px rgba(0,0,0,0.2);
+        }
+
+        .identity-data table {
+            font-size: 1.1em;
+            line-height: 2;
+        }
+        .identity-data td {
+            padding: 5px 10px;
+        }
+        .identity-data td:first-child {
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        /* Kertas Cream (Isi Teks) */
+        .paper-content {
+            background-color: #FFFDD0; /* Warna Kertas Cream */
+            padding: 40px;
+            border-radius: 5px;
+            box-shadow: 2px 4px 15px rgba(0,0,0,0.15);
+            margin-bottom: 30px;
+            position: relative;
+        }
+        /* Efek garis tepi seolah kertas */
+        .paper-content::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 5px;
+            pointer-events: none;
+        }
+
+        .paper-content h3 {
+            text-align: center;
+            color: #444;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .paper-content p {
+            text-align: justify; /* Rata Kanan Kiri */
+            text-indent: 40px; /* Awal paragraf menjorok */
+            line-height: 1.8;
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        /* Galeri Foto Scroll */
+        .gallery-wrapper {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .gallery-wrapper h3 {
+            text-align: center;
+            color: #1e3c72;
+            margin-top: 0;
+        }
+
+        .gallery-container {
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+            position: relative;
+            padding: 10px 0;
+        }
+
+        .gallery-track {
+            display: inline-block;
+            animation: scrollGallery 20s linear infinite;
+        }
+
+        /* Pause animasi saat dihover */
+        .gallery-track:hover {
+            animation-play-state: paused;
+        }
+
+        .gallery-track img {
+            height: 250px;
+            margin: 0 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            object-fit: cover;
+        }
+
+        @keyframes scrollGallery {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Feedback Section */
+        .feedback-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .btn {
+            background-color: #2a5298;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1em;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+
+        .btn:hover { background-color: #1e3c72; }
+        .btn-save { background-color: #28a745; margin-top: 15px; }
+        .btn-save:hover { background-color: #218838; }
+
+        .feedback-form {
+            display: none;
+            margin-top: 20px;
+            text-align: left;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .feedback-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        .feedback-form input, .feedback-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .feedback-result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9f7ef;
+            border-left: 5px solid #28a745;
+            text-align: left;
+            display: none;
+            border-radius: 4px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1e3c72;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+
+        /* Responsif untuk HP */
+        @media (max-width: 768px) {
+            .identity-section { justify-content: center; }
+            .paper-content { padding: 20px; }
+            h1.title-oswald { font-size: 2em; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="title-oswald">POJOK BACA DIGITAL 8C</h1>
+        <div class="english-title">ENGLISH</div>
+        <h2 class="title-oswald">SMP Negeri 15 Semarang</h2>
+        <div class="subtitle">Tahun Ajaran 2025/2026</div>
+        
+        <img src="https://i.ibb.co.com/d4CXMJ8f/LOGO-SEKOLAH-1.png" alt="Logo SMP Negeri 15 Semarang" class="logo">
+    </header>
+
+    <div class="marquee-container">
+        <div class="marquee-content">
+            SMP Negeri 15 Semarang, tiada hari tanpa prestasi.
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <section class="identity-section">
+            <img src="https://i.ibb.co.com/9k0xB2TL/IMG-20250713-WA0007-1.jpg" alt="Foto Profil" class="profile-pic">
+            <div class="identity-data">
+                <table>
+                    <tr><td>Nama</td><td>: Rafif Gibran Fahrezi</td></tr>
+                    <tr><td>Kelas</td><td>: 8C</td></tr>
+                    <tr><td>No. Absen</td><td>: 26</td></tr>
+                    <tr><td>Guru Pengampu</td><td>: Rista</td></tr>
+                    <tr><td>Mata Pelajaran</td><td>: English</td></tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="paper-content">
+            <h3>My trip in Provincial library</h3>
+            <p>
+                Last week, we went to provicial library . We arrived at Provincial Library at 08.00 a.m. After that I listened to the librarian's explanation about intreracy. After that I explored the library to find the interesting book. After I got I book, I read with my Friends, we were shared the essence of story the book luckyly, I got member card from librarian. I can borrowed book all times. After that I watched movie at audio visual room when the horor movie played, my friend's Gibran scared, scream and hug me like a little baby. of took a photo and video in Library, learned most of Knowledge in Library After I got out from Cinema, I Feel Prigthened but I Still brave.
+            </p>
+            <p>
+                At 17.00 AM, we returned to school I felt happy because I got a new lessons about book. I hoped can go to Library one day with my friend.
+            </p>
+        </section>
+
+        <section class="gallery-wrapper">
+            <h3>Galeri Kegiatan</h3>
+            <div class="gallery-container">
+                <div class="gallery-track">
+                    <img src="https://i.ibb.co.com/Tqvz5dHb/IMG-20260203-WA0009.jpg" alt="Galeri 1">
+                    <img src="https://i.ibb.co.com/WXZc40N/IMG-20260203-WA0011.jpg" alt="Galeri 2">
+                    <img src="https://i.ibb.co.com/MD6TtJgd/IMG-20260211-WA0000.jpg" alt="Galeri 3">
+                    <img src="https://i.ibb.co.com/Tqvz5dHb/IMG-20260203-WA0009.jpg" alt="Galeri 1">
+                    <img src="https://i.ibb.co.com/WXZc40N/IMG-20260203-WA0011.jpg" alt="Galeri 2">
+                    <img src="https://i.ibb.co.com/MD6TtJgd/IMG-20260211-WA0000.jpg" alt="Galeri 3">
+                </div>
+            </div>
+        </section>
+
+        <section class="feedback-section">
+            <button class="btn" onclick="tampilkanForm()">Tambahkan Feedback</button>
+
+            <div class="feedback-form" id="form-feedback">
+                <label for="nilai">Penilaian Guru (Skala 1-100):</label>
+                <input type="number" id="nilai" placeholder="Masukkan nilai..." min="0" max="100">
+
+                <label for="catatan">Catatan / Feedback:</label>
+                <textarea id="catatan" rows="4" placeholder="Tuliskan feedback di sini..."></textarea>
+
+                <button class="btn btn-save" onclick="simpanFeedback()">Simpan Feedback</button>
+            </div>
+
+            <div class="feedback-result" id="hasil-feedback">
+                </div>
+        </section>
+
+    </div>
+
+    <footer>
+        &copy; Kokurikuler 2026 – SMP Negeri 15 Semarang
+    </footer>
+
+    <script>
+        // Cek apakah ada feedback yang tersimpan saat halaman pertama kali dimuat
+        window.onload = function() {
+            var savedNilai = localStorage.getItem('feedbackNilai_8C');
+            var savedCatatan = localStorage.getItem('feedbackCatatan_8C');
+            
+            if (savedNilai && savedCatatan) {
+                tampilkanHasil(savedNilai, savedCatatan);
+            }
+        };
+
+        // Fungsi memunculkan form
+        function tampilkanForm() {
+            var form = document.getElementById('form-feedback');
+            if(form.style.display === "block") {
+                form.style.display = "none";
+            } else {
+                form.style.display = "block";
+            }
+        }
+
+        // Fungsi menyimpan ke Local Storage dan menampilkan hasil
+        function simpanFeedback() {
+            var nilai = document.getElementById('nilai').value;
+            var catatan = document.getElementById('catatan').value;
+
+            // Validasi form
+            if(nilai.trim() === "" || catatan.trim() === "") {
+                alert("Harap isi nilai dan catatan feedback terlebih dahulu!");
+                return;
+            }
+
+            // Simpan data ke Local Storage browser
+            localStorage.setItem('feedbackNilai_8C', nilai);
+            localStorage.setItem('feedbackCatatan_8C', catatan);
+
+            // Tampilkan ke layar
+            tampilkanHasil(nilai, catatan);
+            
+            // Sembunyikan form dan reset isian
+            document.getElementById('form-feedback').style.display = "none";
+            document.getElementById('nilai').value = "";
+            document.getElementById('catatan').value = "";
+        }
+
+        // Fungsi khusus untuk merender hasil ke HTML
+        function tampilkanHasil(nilai, catatan) {
+            var hasilDiv = document.getElementById('hasil-feedback');
+            hasilDiv.innerHTML = "<strong>Feedback dari Guru:</strong><br><br>" +
+                                 "<strong>Nilai:</strong> <span style='color:#d32f2f; font-weight:bold; font-size:1.2em;'>" + nilai + "</span><br>" +
+                                 "<strong>Catatan:</strong> <br>" + catatan;
+            
+            hasilDiv.style.display = "block";
+        }
+    </script>
+
+</body>
+</html>
