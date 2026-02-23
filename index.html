@@ -336,7 +336,10 @@
             <button class="btn" onclick="tampilkanForm()">Tambahkan Feedback</button>
 
             <div class="feedback-form" id="form-feedback">
-                <label for="nilai">Penilaian Guru (Skala 1-100):</label>
+                <label for="nama">Nama Guru:</label>
+                <input type="text" id="nama" placeholder="Masukkan nama Anda...">
+
+                <label for="nilai">Penilaian (Skala 1-100):</label>
                 <input type="number" id="nilai" placeholder="Masukkan nilai..." min="0" max="100">
 
                 <label for="catatan">Catatan / Feedback:</label>
@@ -349,24 +352,14 @@
                 </div>
         </section>
 
-    </div>
-
-    <footer>
+    </div> <footer>
         &copy; Kokurikuler 2026 – SMP Negeri 15 Semarang
     </footer>
 
     <script>
-        // Cek apakah ada feedback yang tersimpan saat halaman pertama kali dimuat
-        window.onload = function() {
-            var savedNilai = localStorage.getItem('feedbackNilai_8C');
-            var savedCatatan = localStorage.getItem('feedbackCatatan_8C');
-            
-            if (savedNilai && savedCatatan) {
-                tampilkanHasil(savedNilai, savedCatatan);
-            }
-        };
+        // PASTIKAN MENGGANTI INI DENGAN URL WEB APP ANDA YANG BARU/AKTIF
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyJ7SSL31lUo_T_LDOQz9fa0-YkVaDdWZ2bkQx5I_gfEZ6BUpBidYY_3tMeuCkzBsk/exec';
 
-        // Fungsi memunculkan form
         function tampilkanForm() {
             var form = document.getElementById('form-feedback');
             if(form.style.display === "block") {
@@ -376,38 +369,50 @@
             }
         }
 
-        // Fungsi menyimpan ke Local Storage dan menampilkan hasil
         function simpanFeedback() {
+            // Ambil data dari form
+            var nama = document.getElementById('nama').value;
             var nilai = document.getElementById('nilai').value;
             var catatan = document.getElementById('catatan').value;
+            var hasilDiv = document.getElementById('hasil-feedback');
+            var formDiv = document.getElementById('form-feedback');
 
-            // Validasi form
-            if(nilai.trim() === "" || catatan.trim() === "") {
-                alert("Harap isi nilai dan catatan feedback terlebih dahulu!");
+            // Validasi input (pastikan nama, nilai, dan catatan diisi)
+            if(nama.trim() === "" || nilai.trim() === "" || catatan.trim() === "") {
+                alert("Harap isi Nama, Nilai, dan Catatan feedback terlebih dahulu!");
                 return;
             }
 
-            // Simpan data ke Local Storage browser
-            localStorage.setItem('feedbackNilai_8C', nilai);
-            localStorage.setItem('feedbackCatatan_8C', catatan);
-
-            // Tampilkan ke layar
-            tampilkanHasil(nilai, catatan);
-            
-            // Sembunyikan form dan reset isian
-            document.getElementById('form-feedback').style.display = "none";
-            document.getElementById('nilai').value = "";
-            document.getElementById('catatan').value = "";
-        }
-
-        // Fungsi khusus untuk merender hasil ke HTML
-        function tampilkanHasil(nilai, catatan) {
-            var hasilDiv = document.getElementById('hasil-feedback');
-            hasilDiv.innerHTML = "<strong>Feedback dari Guru:</strong><br><br>" +
-                                 "<strong>Nilai:</strong> <span style='color:#d32f2f; font-weight:bold; font-size:1.2em;'>" + nilai + "</span><br>" +
-                                 "<strong>Catatan:</strong> <br>" + catatan;
-            
+            // Tampilkan status loading
+            formDiv.style.display = "none";
+            hasilDiv.innerHTML = "<em>Mengirim data ke server...</em>";
             hasilDiv.style.display = "block";
+
+            // Menyiapkan format data untuk dikirim ke Apps Script
+            var formData = new URLSearchParams();
+            formData.append('nama', nama);
+            formData.append('nilai', nilai);
+            formData.append('catatan', catatan);
+
+            // Mengirim request ke Google Sheets (menggunakan mode no-cors untuk menghindari error)
+            fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
+                .then(response => {
+                    // Jika sukses, tampilkan hasil di layar
+                    hasilDiv.innerHTML = "<strong>Feedback Berhasil Disimpan!</strong><br><br>" +
+                                         "<strong>Nama Guru:</strong> " + nama + "<br>" +
+                                         "<strong>Nilai:</strong> <span style='color:#d32f2f; font-weight:bold; font-size:1.2em;'>" + nilai + "</span><br>" +
+                                         "<strong>Catatan:</strong> <br>" + catatan;
+                    
+                    // Reset isi form
+                    document.getElementById('nama').value = "";
+                    document.getElementById('nilai').value = "";
+                    document.getElementById('catatan').value = "";
+                })
+                .catch(error => {
+                    // Jika gagal
+                    hasilDiv.innerHTML = "<strong style='color:red;'>Gagal menyimpan feedback. Silakan coba lagi.</strong>";
+                    console.error('Error!', error.message);
+                });
         }
     </script>
 
